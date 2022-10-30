@@ -3,7 +3,6 @@ import {IconButton,MD3Colors , SafeAreaView,ScrollView,TouchableOpacity, StyleSh
 import Button from "./Button";
 import Row from "./Row";
 import calculator, {initialState} from "../util/calculator"
-//import SearchList from "./components/SearchList"
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import SearchScreen from "./SearchScreen";
@@ -15,42 +14,26 @@ export default class HomeScreen extends Component {
         super(props);
         this.st = {
           list:[],
-          Filter:[],
         };
       
     }    
     HandleTap = (type, value) =>{
+        if(this.state.flag===true)
+            this.st.list=[]
         if(type==="equal")
         {
             var temp={expr:this.state.currentValue,tol:this.state.result}
             this.st.list=[...this.st.list,temp]
-            //navigation.navigate('History', {name:  this.st.list })
             this.setState((state)=>calculator(type,value,state))
         }
         else
             this.setState((state)=>calculator(type,value,state))
-    }
-    HandleSearch=(text)=>{
-        this.st.flag=true
-        if(text){   
-            const temp = text.toLowerCase()
-            const templist = this.st.list.filter(item => {
-                if (item.expr.includes(temp)||item.tol.includes(temp))
-                return item
-            })
-           this.st.Filter=templist
-        }
-        else{
-            this.st.Filter=this.st.list
-        }
-        console.log(this.st.Filter)
     }
 
     render() {
         const {navigation} = this.props
 
         return (
-            
             <View style={styles.container}>
                 <StatusBar 
                     animated={true}

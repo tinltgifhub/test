@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import createNavigationContainerRef from "@react-navigation/native";
 import SearchList from "./SearchList";
 import HomeScreen from "./HomeScreen";
+import { InitialState } from '@react-navigation/native';
 
 const SearchScreen=({navigation,route})=>{
     const {Hislist}=route.params;
@@ -11,7 +12,5 @@ const SearchScreen=({navigation,route})=>{
         <SearchList dataSource={Hislist}>
         </SearchList>
     )
-    
 }
-
 export default SearchScreen

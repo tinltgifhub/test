@@ -52,7 +52,7 @@ class Calculation {
           },
           error = msg => {
               let notation = match ? match.index : expression.length;
-              return `${msg} at ${notation+1}:\n${expression}\n${' '.repeat(notation)}^`;
+              return `${msg}`// at ${notation+1}:\n${expression}\n${' '.repeat(notation)}^`;
           },
           pattern = new RegExp(
               "\\d+(?:\\.\\d+)?|" 
@@ -98,7 +98,6 @@ class Calculation {
   }
 }
 Calculation = new Calculation(); 
-
 export const initialState = {
   currentValue: "",
   result:"",
@@ -120,6 +119,8 @@ const calculator=(type,value,state)=>{
       return {currentValue:state.currentValue+value,result:Calculation.calculate(state.currentValue+value)}
 
     case "C":
+      if(state.currentValue.length===1)
+        return{ currentValue:state.currentValue.slice(0,-1),result:""}
       return {
         currentValue:state.currentValue.slice(0,-1),result:Calculation.calculate(state.currentValue.slice(0,-1))
       };
@@ -142,7 +143,9 @@ const calculator=(type,value,state)=>{
       return{ currentValue:state.currentValue+value};
 
     case "equal":
-      return{ currentValue:state.result.toString(),result:""};
+    if(isNaN(state.result.toString().slice(0,1)))
+      return{ currentValue:"",result:""};
+    return{ currentValue:state.result.toString(),result:""};
     default:
       return state;
 }
