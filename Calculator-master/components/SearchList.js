@@ -1,4 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import HomeScreen from './HomeScreen';
+
 import {
     TouchableOpacity,
     StyleSheet,
@@ -8,36 +12,55 @@ import {
     TextInput,
     Dimensions,
 } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import Button from './Button';
+
 
 export default function SearchList(props) {
     const { dataSource } = props
+    const [filter,setfilter] = useState([])
+    const handleText=(text)=>{
+        setfilter(dataSource)
+        if(text){   
+            const temp = text.toLowerCase()
+            const templist = dataSource.filter(item => {
+                if (item.expr.toString().includes(temp)||item.tol.toString().includes(temp))
+                return item
+            })
+            setfilter(templist)
+        }
+    }
+
     return (
         <ScrollView
             onPress={props.onPress}
-            style={styles.container}
-            >
+            style={styles.container}>
+            <View>
+                <TextInput autoFocus={true} placeholder='Click here to view History' onPressOut={()=>handleText('')} style={styles.textInput} onChangeText={(text)=>handleText(text)}></TextInput>
+                <Button text={'Clear'} onPress={()=>setfilter([])}></Button>
+            </View>
+            
             <View style={styles.subContainer}>
                 {
-                    dataSource.length ?
-                        dataSource.map(item => {
+                    filter.length ?
+                    filter.map(item => {
                             return (
                                 <View style={styles.itemView}>
                                     <TouchableOpacity>
-                                        <Text style={styles.itemText}>{item.expr}</Text>
+                                        <Text style={styles.itemText}>Exp: {item.expr}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity>
-                                        <Text style={styles.itemText}>{item.tol}</Text>
+                                        <Text style={styles.itemText}>Res: {item.tol}</Text>
                                     </TouchableOpacity>
                                 </View>
+                                
                             )
                         })
-                        :
-                        <View
-                            style={styles.noResultView}>
-                            <Text style={styles.noResultText}>No search items matched</Text>
-                        </View>
+                        :null
+                    
+                        // <View
+                        //     style={styles.noResultView}>
+                        //     <Text style={styles.noResultText}>No search items matched</Text>
+                        // </View>
                 }
             </View>
         </ScrollView>
@@ -97,5 +120,21 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:"center",
     },
+    textInput: {
+        backgroundColor: '#BFBFBF',
+        borderRadius: 10,
+        height: 50,
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginHorizontal:screen.width/20,
+        paddingHorizontal: 10,
+        textAlign: 'center',
+        width: '80%'
+      },
+
+    clearButton:{
+        width:'10%',
+
+    }
 
 });
